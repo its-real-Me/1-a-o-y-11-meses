@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>1 año y 11 meses</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Nunito:wght@400;600&display=swap">
+<style>
+  :root{
+    --bg:#f3f0fb; --surface:#ffffff; --ink:#1d2145; --muted:#5a5f86;
+    --glow:#b8860b; --rose:#c2577a; --line:#d9d4ee;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1226; --surface:#1a1e3d; --ink:#eceefb; --muted:#a9aed3;
+      --glow:#f2d16b; --rose:#e89bb0; --line:#2c3163; color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1226; --surface:#1a1e3d; --ink:#eceefb; --muted:#a9aed3;
+    --glow:#f2d16b; --rose:#e89bb0; --line:#2c3163; color-scheme:dark;
+  }
+  html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+  *,*::before,*::after{box-sizing:inherit}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;line-height:1.7;min-height:100%}
+  h1,h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;line-height:1.15;margin:0 0 .6em}
+  h1{font-size:clamp(2.4rem,9vw,4.2rem)}
+  h2{font-size:clamp(1.7rem,5vw,2.4rem)}
+  section{max-width:680px;margin:0 auto;padding:4.5rem 1.4rem;position:relative;z-index:1}
+  .hidden{display:none!important}
+
+  /* cielo animado (canvas) detrás de todo */
+  #sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  body::before{content:'';position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(40% 30% at 20% 25%,color-mix(in srgb,var(--rose) 22%,transparent),transparent 70%),radial-gradient(35% 30% at 80% 70%,color-mix(in srgb,var(--glow) 16%,transparent),transparent 70%);animation:drift 24s ease-in-out infinite alternate}
+  @keyframes drift{to{transform:translate(4%,-3%) scale(1.08)}}
+
+  /* ===== PANTALLA DE CONTRASEÑA ===== */
+  #gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1.4rem;position:relative;z-index:1}
+  #gate h1{animation:rise-in 1.2s both}
+  #gate p{color:var(--muted);max-width:30ch;margin:0 0 1.6rem;animation:rise-in 1.2s .3s both}
+  #pass{font:inherit;font-size:1.6rem;letter-spacing:.5em;text-align:center;width:11em;max-width:100%;padding:.6rem .4rem .6rem .9rem;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);transition:box-shadow .3s,border-color .3s;animation:rise-in 1.2s .6s both}
+  #pass:focus{border-color:var(--glow);box-shadow:0 0 22px -4px var(--glow)}
+  #pass:focus-visible,button:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+  button{font:inherit;font-weight:600;cursor:pointer;border:0;border-radius:999px;padding:.7rem 1.6rem;background:var(--glow);color:#1d2145;transition:transform .2s,box-shadow .2s}
+  button:hover{transform:translateY(-2px);box-shadow:0 8px 22px -8px var(--glow)}
+  #gate button{margin-top:1.1rem;animation:rise-in 1.2s .9s both}
+  #err{min-height:1.6em;color:var(--rose);margin-top:.8rem;font-size:.95rem}
+  .shake{animation:shake .4s!important}
+  .unlock{animation:unlock 1s cubic-bezier(.4,0,.2,1) forwards!important}
+  @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  @keyframes unlock{to{opacity:0;transform:scale(1.15);filter:blur(8px)}}
+  @keyframes rise-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+
+  /* aparición al hacer scroll */
+  .rv{opacity:0;transform:translateY(34px) scale(.98);filter:blur(6px);transition:opacity 1.3s cubic-bezier(.22,1,.36,1),transform 1.3s cubic-bezier(.22,1,.36,1),filter 1.3s cubic-bezier(.22,1,.36,1)}
+  .rv.in{opacity:1;transform:none;filter:none}
+
+  /* ===== HERO: luna + título + contador ===== */
+  #hero{text-align:center;padding-top:5rem}
+  #hero p{color:var(--muted)}
+  .moon{width:64px;height:64px;margin:0 auto 1.4rem;border-radius:50%;box-shadow:inset -20px -6px 0 0 var(--glow);filter:drop-shadow(0 0 16px var(--glow));animation:bob 5s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-8px)}}
+  .ch{display:inline-block;animation:pop 1.1s cubic-bezier(.34,1.56,.64,1) both}
+  @keyframes pop{from{opacity:0;transform:translateY(18px) scale(.9);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+  .counter{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:2rem}
+  .counter div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem .4rem;box-shadow:0 0 28px -16px var(--glow)}
+  .counter b{display:block;font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--glow);line-height:1}
+  .counter span{font-size:.85rem;color:var(--muted)}
+  .bump{animation:roll .8s cubic-bezier(.22,1,.36,1)}
+  @keyframes roll{from{transform:translateY(55%);opacity:0;filter:blur(3px);text-shadow:0 0 18px var(--glow)}to{transform:none;opacity:1;filter:none}}
+
+  /* ===== CARTA: sobre + máquina de escribir ===== */
+  .env{width:min(300px,80%);height:190px;margin:1rem auto;position:relative;cursor:pointer;perspective:700px;transition:opacity .6s,transform .6s;animation:bob 3.5s ease-in-out infinite}
+  .env .back{position:absolute;inset:0;background:var(--surface);border:2px solid var(--line);border-radius:10px;box-shadow:0 24px 40px -24px var(--rose)}
+  .env .paper{position:absolute;left:12px;right:12px;top:14px;bottom:14px;background:var(--bg);border:1px solid var(--line);border-radius:6px;z-index:1;transition:transform 1s .5s cubic-bezier(.22,1,.36,1)}
+  .env.open .paper{transform:translateY(-70px)}
+  .env .seal{position:absolute;left:50%;top:92px;transform:translateX(-50%);font-size:2.6rem;z-index:3;transition:opacity .4s}
+  .env.open .seal{opacity:0}
+  .env .flap{position:absolute;left:0;right:0;top:0;height:100px;background:var(--rose);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .9s cubic-bezier(.4,0,.2,1);z-index:2}
+  .env.open{animation:none}
+  .env.open .flap{transform:rotateX(180deg)}
+  .env.gone{opacity:0;transform:translateY(30px) scale(.9)}
+  .hint{text-align:center;color:var(--muted);font-size:.9rem}
+  .letter{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--rose);border-radius:6px 16px 16px 6px;padding:2rem 1.6rem;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;line-height:1.75;animation:fadein .9s;box-shadow:0 20px 50px -30px var(--rose)}
+  .letter p{margin:0 0 1em}
+
+  /* ===== MINIJUEGO: cartas 3D ===== */
+  #board{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:1.2rem 0}
+  .card{aspect-ratio:1;perspective:600px;background:none!important;border:0;padding:0;border-radius:12px;box-shadow:none!important}
+  .card .in{display:block;width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.34,1.3,.64,1)}
+  .card.up .in,.card.done .in{transform:rotateY(180deg)}
+  .f{position:absolute;inset:0;display:grid;place-items:center;border-radius:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;font-size:2rem}
+  .f.fr{background:var(--surface);border:1px solid var(--line);color:var(--glow)}
+  .f.bk{transform:rotateY(180deg);background:var(--glow);color:#1d2145}
+  .card.done .bk{background:var(--rose);box-shadow:0 0 20px var(--rose);animation:glowp 1.4s ease-out}
+  @keyframes glowp{from{box-shadow:0 0 70px 16px var(--glow)}}
+  #gmsg{color:var(--muted);min-height:1.6em}
+
+  /* ===== SORPRESA FINAL ===== */
+  #surprise{text-align:center;padding-bottom:7rem}
+  #cricket{font-size:4rem;background:none;padding:.4rem;border-radius:50%;filter:drop-shadow(0 0 16px var(--glow));animation:hop 2.6s ease-in-out infinite}
+  @keyframes hop{0%,60%,100%{transform:none}70%{transform:translateY(-18px) rotate(-8deg)}80%{transform:translateY(0)}}
+  #final{margin-top:1.6rem}
+  #final p{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;line-height:1.6;animation:rise-in 1.2s both}
+  .heart{position:fixed;bottom:-2rem;z-index:5;animation:up 4.5s linear forwards;pointer-events:none}
+  @keyframes up{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+  #const{width:100%;aspect-ratio:1/1;display:block;border-radius:20px;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--glow) 10%,var(--surface)),var(--surface));border:1px solid var(--line);touch-action:manipulation;cursor:pointer}
+  #cmsg{margin-top:1.2rem;text-align:center;animation:rise-in 1.4s both}
+  #cmsg p{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.4rem;margin:0 0 .6em}
+  .wstar{font-size:3.4rem;background:none;padding:.3rem;border-radius:50%;filter:drop-shadow(0 0 18px var(--glow));animation:twinkle 3s ease-in-out infinite;display:block;margin:1rem auto}
+  @keyframes twinkle{50%{transform:scale(1.12) rotate(12deg);filter:drop-shadow(0 0 30px var(--glow))}}
+  textarea{font:inherit;width:100%;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:.8rem;margin:.6rem 0;resize:vertical}
+  textarea:focus{border-color:var(--glow);outline:none;box-shadow:0 0 22px -4px var(--glow)}
+  #wbox{text-align:center;animation:rise-in .8s both}
+  #wdone{text-align:center;color:var(--glow);font-family:'Cormorant Garamond',Georgia,serif;font-size:1.4rem;animation:rise-in 1s both}
+  .wish{position:fixed;left:50%;top:60%;z-index:6;transform:translateX(-50%);max-width:80vw;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;color:var(--glow);text-shadow:0 0 14px var(--glow);animation:wishfly 3.2s cubic-bezier(.5,0,.8,.4) forwards;pointer-events:none}
+  @keyframes wishfly{to{transform:translate(-50%,-55vh) scale(.25);opacity:0;filter:blur(6px)}}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}.rv{opacity:1;transform:none;filter:none}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<!-- 1) PANTALLA DE CONTRASEÑA -->
+<div id="gate">
+  <h1>Antes de entrar</h1>
+  <p>Escribe la fecha en que empezó todo: día, mes y año con dos cifras (ddmmaa).</p>
+  <input id="pass" type="password" inputmode="numeric" maxlength="6" autocomplete="off" aria-label="Contraseña">
+  <button id="enter">Entrar</button>
+  <div id="err" role="alert"></div>
+</div>
+
+<!-- 2) CONTENIDO (oculto hasta acertar la contraseña) -->
+<main id="site" class="hidden">
+
+  <section id="hero">
+    <div class="moon"></div>
+    <h1 id="title" aria-label="1 año y 11 meses"></h1>
+    <p>Esto es lo que llevamos juntos, contado en vivo.</p>
+    <div class="counter">
+      <div><b id="c-y">0</b><span>años</span></div>
+      <div><b id="c-m">0</b><span>meses</span></div>
+      <div><b id="c-d">0</b><span>días</span></div>
+      <div><b id="c-h">0</b><span>horas</span></div>
+      <div><b id="c-mi">0</b><span>minutos</span></div>
+      <div><b id="c-s">0</b><span>segundos</span></div>
+    </div>
+  </section>
+
+  <section class="rv">
+    <h2>Una carta para ti</h2>
+    <div class="env" id="env" role="button" tabindex="0" aria-label="Abrir carta">
+      <div class="back"></div><div class="paper"></div><div class="flap"></div><div class="seal">💌</div>
+    </div>
+    <p class="hint" id="envhint">Toca el sobre para abrirlo.</p>
+    <div class="letter hidden" id="letter"></div>
+  </section>
+
+  <section class="rv">
+    <h2>Encuentra las parejas</h2>
+    <p>Voltea las cartas de dos en dos. Sin prisa, no hay tiempo límite.</p>
+    <div id="board"></div>
+    <div id="gmsg"></div>
+    <button id="restart">Reiniciar</button>
+  </section>
+
+  <section class="rv">
+    <h2>Nuestra constelación</h2>
+    <p id="cinfo">Toca las estrellas en orden, empezando por la que brilla.</p>
+    <canvas id="const" aria-label="Constelación para unir tocando las estrellas"></canvas>
+    <div id="cmsg" class="hidden"></div>
+  </section>
+
+  <section class="rv">
+    <h2>Pide un deseo</h2>
+    <p>Toca la estrella, escribe lo que quieras y mándalo al cielo. Se queda entre tú y las estrellas: la página no lo guarda ni se lo muestra a nadie.</p>
+    <button id="wstar" class="wstar" aria-label="Pedir un deseo">⭐</button>
+    <div id="wbox" class="hidden"><textarea id="wtext" maxlength="140" rows="3" placeholder="Escribe tu deseo..."></textarea><button id="wsend">Mandar al cielo</button></div>
+    <p id="wdone" class="hidden"></p>
+  </section>
+
+  <section id="surprise" class="rv">
+    <h2>Un último detalle</h2>
+    <p>Toca al grillito.</p>
+    <button id="cricket" aria-label="Tocar al grillito">🦗</button>
+    <div id="final" class="hidden"></div>
+  </section>
+
+</main>
+
+<script>
+/* =====================================================
+   CONFIGURACIÓN: aquí personalizas todo sin tocar el resto
+   ===================================================== */
+const CONFIG = {
+  password: "271224",                  // 27/12/24 (ddmmaa)
+  start: "2024-12-27T00:00:00",        // inicio de la relación
+  title: "1 año y 11 meses",
+  constellationName: "La constelación del Grillo",
+  constellationText: [
+    "Unir estas estrellas me recordó que lo bonito se arma poco a poco.",
+    "La luna se ve hermosa esta noche no crees?, Las estrellas brillan como el brillo de tus ojitos"
+  ],
+  letter: [
+    "Hola, mi Grillo:",
+    "Hoy se cumple nuestro 1 año con 11 meses, realmente ha sido un año muy hermoso ",
+    "A la vez se que han pasado muchas cosas muy feas, pero realmente desearia poder abrazarte",
+    "Si supieras todo lo que he pasado, realmente quiero decirte que cada noche veo nuestro chat y realmente me gusta leer cada noche un mensaje tuyo diciendome que me amas",
+    "Sabes es complicado por que he tenido muy mala racha estos dias, sinceramente no hay dia que no deje de pensar en ti",
+    "Sinceramente hay noches que llego a llorar por que sinceramente estoy solo ahora",
+    "Y no quiero que me mal interpretes, Realmente no quiero que sientas una presion de volver si o si por esta carta, realmente tomate tu tiempo",
+    "He visto que te has divertido con tus amigos, realmente me llena de mucha felicidad y tanto envidia, por que sinceramente no puedo hacer lo mismo que ellos hacen contigo",
+    "Me he detenido en varios momentos en donde queria escribirte, pero me pongo a pensar que tu realmente necesitas esto",
+    "Tienes muchas dudas y realmente entiendo por lo que estas pasando",
+    "tambien quiero notificarte que he leido el Comic, no recuerdo como se escribe, pero realmente me encanto",
+    "Lo de Edith Rudwick, realmente fue una historia que me hizo llorar",
+    "Practicamente de pasar a ser villana a ser la mejor personaje de todos",
+    "Incluso con Killian, que realmente me senti re identificado ademas de ver como todo se desarrolla",
+    "Realmente espero que el dia que regreses, sea para quedarte, realmente no me puedo imaginar una vida sin ti",
+    "Sabes Killian y Edith tuvieron conflictos los cuales ellos al pasar de los tiempos lograron resolverlo y tuvieron 2 Hijos, la beba y el nene",
+    "Sinceramente espero cada mañana un mensaje tuyo imaginandome respondiendote yo realmente te extraño demasiado, recuerda que eres mi lugar seguro, ahora sin mi lugar seguro, es complicado seguir",
+    "OJO, se que parezco desesperado pero creeme que podre esperar tu regreso, no tienes que apresurarte, Te amo muchisimo Mi Grillito, Mi anita, Mi sunshine.. Mi vida hermosa, My Lady Edith. Espero con demasiadas ansias tu regreso",
+    "Con Bastante amor y cariño, Maci (Llore mientras escribia esto ok)"
+  ],
+  emojis: ["🦗","🌙","💌","🎧","🍓","🌸","☀️","🎮"],
+  finalMessage: [
+    "Gracias por haber sido parte de mi vida estos casi dos años.",
+    "Eres el motivo de la cual sigo luchando en esta vida tan miserable"
+  ]
+};
+
+const $ = id => document.getElementById(id);
+const REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+
+const cv = $("sky"), cx = cv.getContext("2d");
+let W, H, stars = [], flies = [], shoot = null, color = "#f2d16b", n = 0, px = 0, tpx = 0;
+function size(){
+  const d = Math.min(devicePixelRatio || 1, 2);
+  W = innerWidth; H = innerHeight;
+  cv.width = W*d; cv.height = H*d; cx.setTransform(d,0,0,d,0,0);
+  stars = Array.from({length: Math.round(W*H/9000)}, () => ({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.4+.3, p:Math.random()*6.28, s:Math.random()*.02+.005, z:Math.random()*.8+.2}));
+  flies = Array.from({length:16}, () => ({x:Math.random()*W, y:Math.random()*H, a:Math.random()*6.28, v:Math.random()*.3+.1, p:Math.random()*6.28}));
+}
+function frame(){
+  if (n++ % 30 === 0) color = getComputedStyle(document.documentElement).getPropertyValue("--glow").trim() || color;
+  px += (tpx-px)*.05;   // suaviza el movimiento hacia el dedo o el mouse
+  cx.clearRect(0,0,W,H); cx.fillStyle = color; cx.strokeStyle = color;
+  for (const s of stars){                       // estrellas que titilan
+    s.p += s.s; cx.globalAlpha = .2 + .55*(.5+.5*Math.sin(s.p));
+    cx.beginPath(); cx.arc((s.x+px*14*s.z+W)%W, ((s.y-scrollY*.08*s.z)%H+H)%H, s.r,0,6.28); cx.fill();   // paralaje: las estrellas lejanas se mueven menos
+  }
+  cx.shadowBlur = 14; cx.shadowColor = color;
+  for (const f of flies){                       // luciérnagas que vagan
+    f.a += Math.sin(f.p*.7)*.03 + (Math.random()-.5)*.05; f.x += Math.cos(f.a)*f.v; f.y += Math.sin(f.a)*f.v; f.p += .04;
+    if (f.x<0) f.x=W; if (f.x>W) f.x=0; if (f.y<0) f.y=H; if (f.y>H) f.y=0;
+    cx.globalAlpha = .35 + .65*(.5+.5*Math.sin(f.p));
+    cx.beginPath(); cx.arc(f.x,f.y,2.2,0,6.28); cx.fill();
+  }
+  cx.shadowBlur = 0;
+  if (!shoot && Math.random() < .003) shoot = {x:Math.random()*W*.8+W*.2, y:Math.random()*H*.4, l:0};
+  if (shoot){                                   
+    shoot.x -= 7; shoot.y += 3.5; shoot.l++;
+    cx.globalAlpha = Math.max(0, 1-shoot.l/50); cx.lineWidth = 2;
+    const g = cx.createLinearGradient(shoot.x,shoot.y,shoot.x+90,shoot.y-45); g.addColorStop(0,color); g.addColorStop(1,'transparent');
+    cx.strokeStyle = g; cx.beginPath(); cx.moveTo(shoot.x,shoot.y); cx.lineTo(shoot.x+90,shoot.y-45); cx.stroke(); cx.strokeStyle = color;
+    if (shoot.l > 50) shoot = null;
+  }
+  cx.globalAlpha = 1;
+  if (!REDUCE) requestAnimationFrame(frame);
+}
+function launchShoot(){ shoot = {x:W*.95, y:H*.12, l:-10}; }   // estrella fugaz a pedido (la usa el deseo)
+addEventListener("pointermove", e => { tpx = e.clientX/innerWidth - .5; });
+size(); addEventListener("resize", size); frame();
+
+function tryEnter(){
+  if ($("pass").value === CONFIG.password){
+    $("gate").classList.add("unlock");           // animación de salida
+    setTimeout(() => {
+      $("gate").classList.add("hidden");
+      $("site").classList.remove("hidden");
+      window.scrollTo(0,0);
+      buildTitle(); startCounter(); buildGame(); setupReveal();
+    }, REDUCE ? 0 : 900);
+  } else {
+    $("err").textContent = "Esa no es. Pista: la fecha en que empezamos.";
+    $("pass").classList.remove("shake"); void $("pass").offsetWidth; $("pass").classList.add("shake");
+  }
+}
+$("enter").addEventListener("click", tryEnter);
+$("pass").addEventListener("keydown", e => { if (e.key === "Enter") tryEnter(); });
+
+
+function buildTitle(){
+  const t = $("title"); t.innerHTML = "";
+  [...CONFIG.title].forEach((c,i) => {
+    const s = document.createElement("span");
+    s.className = "ch"; s.textContent = c === " " ? "\u00a0" : c;
+    s.style.animationDelay = (i*70) + "ms"; t.appendChild(s);
+  });
+}
+
+function setupReveal(){
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+  }), {threshold:.15});
+  document.querySelectorAll(".rv").forEach(el => io.observe(el));
+}
+
+let timer;
+function setVal(id, v){
+  const el = $(id);
+  if (el.textContent != v){
+    el.textContent = v; el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump");
+  }
+}
+function startCounter(){
+  const start = new Date(CONFIG.start);
+  function tick(){
+    const now = new Date();
+    let months = (now.getFullYear()-start.getFullYear())*12 + (now.getMonth()-start.getMonth());
+    let anchor = new Date(start); anchor.setMonth(start.getMonth()+months);
+    if (anchor > now){ months--; anchor = new Date(start); anchor.setMonth(start.getMonth()+months); }
+    const rem = now - anchor;                    // lo que sobra tras los meses completos
+    setVal("c-y",  Math.floor(months/12));
+    setVal("c-m",  months % 12);
+    setVal("c-d",  Math.floor(rem/864e5));
+    setVal("c-h",  Math.floor(rem/36e5) % 24);
+    setVal("c-mi", Math.floor(rem/6e4) % 60);
+    setVal("c-s",  Math.floor(rem/1e3) % 60);
+  }
+  tick(); clearInterval(timer); timer = setInterval(tick, 1000);
+}
+
+let opened = false, skip = false;
+function openEnv(){
+  if (opened) return; opened = true;
+  $("env").classList.add("open"); $("envhint").classList.add("hidden");
+  setTimeout(() => $("env").classList.add("gone"), 1900);
+  setTimeout(() => { $("env").classList.add("hidden"); typeLetter(); }, 2500);
+}
+async function typeLetter(){
+  const box = $("letter"); box.innerHTML = ""; box.classList.remove("hidden"); skip = REDUCE;
+  box.title = "Toca la carta para verla completa";
+  for (const t of CONFIG.letter){
+    const p = document.createElement("p"); box.appendChild(p);
+    for (let i = 1; i <= t.length && !skip; i++){
+      p.textContent = t.slice(0,i);
+      await new Promise(r => setTimeout(r, 18));
+    }
+    p.textContent = t;
+  }
+}
+$("env").addEventListener("click", openEnv);
+$("env").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") openEnv(); });
+$("letter").addEventListener("click", () => { skip = true; });
+
+let first = null, lock = false, found = 0, moves = 0;
+function buildGame(){
+  const deck = [...CONFIG.emojis, ...CONFIG.emojis].sort(() => Math.random()-.5);
+  first = null; lock = false; found = 0; moves = 0;
+  $("gmsg").textContent = ""; $("board").innerHTML = "";
+  deck.forEach(em => {
+    const b = document.createElement("button");
+    b.className = "card"; b.dataset.e = em; b.setAttribute("aria-label","Carta");
+    b.innerHTML = '<span class="in"><span class="f fr">✦</span><span class="f bk">' + em + '</span></span>';
+    b.addEventListener("click", () => flip(b));
+    $("board").appendChild(b);
+  });
+}
+function flip(b){
+  if (lock || b.classList.contains("up") || b.classList.contains("done")) return;
+  b.classList.add("up");
+  if (!first){ first = b; return; }
+  moves++;
+  if (first.dataset.e === b.dataset.e){          // ¡pareja!
+    first.classList.replace("up","done"); b.classList.replace("up","done");
+    first = null; found++;
+    if (found === CONFIG.emojis.length){
+      $("gmsg").textContent = "¡Las encontraste todas en " + moves + " intentos! 💛";
+      burst(["✨","💛"], 20);
+    }
+  } else {                                       // no coinciden: se voltean de nuevo
+    lock = true;
+    setTimeout(() => { first.classList.remove("up"); b.classList.remove("up"); first = null; lock = false; }, 800);
+  }
+}
+$("restart").addEventListener("click", buildGame);
+
+function burst(chars, count){
+  if (REDUCE) return;
+  for (let i = 0; i < count; i++){
+    const h = document.createElement("span");
+    h.className = "heart"; h.textContent = chars[i % chars.length];
+    h.style.left = Math.random()*95 + "vw";
+    h.style.fontSize = (1 + Math.random()*1.4) + "rem";
+    h.style.animationDelay = (Math.random()*1.5) + "s";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 6500);
+  }
+}
+
+const cc = $('const'), cctx = cc.getContext('2d');
+let cpts = [], clinks = [], cnext = 0, cdone = false, cw = 0, cvis = false, cbg = [];
+function cLayout(){
+  const r = cc.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+  cw = r.width; cc.width = cw*d; cc.height = cw*d; cctx.setTransform(d,0,0,d,0,0);
+  const s = cw/40*.95;   // escala del corazón
+  cpts = Array.from({length:10}, (_,i) => { const t = Math.PI + i*Math.PI/5;   // 10 puntos de una curva de corazón
+    return {x: cw/2 + 16*Math.pow(Math.sin(t),3)*s, y: cw*.46 - (13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*s}; });
+  if (!cbg.length) cbg = Array.from({length:46}, () => ({x:Math.random(), y:Math.random(), r:Math.random()*1.2+.3, p:Math.random()*6.28}));
+}
+function cDraw(ts){
+  if (!cvis) return;
+  cctx.clearRect(0,0,cw,cw); cctx.fillStyle = color; cctx.strokeStyle = color;
+  for (const b of cbg){ cctx.globalAlpha = .15 + .4*(.5+.5*Math.sin(b.p + ts/900)); cctx.beginPath(); cctx.arc(b.x*cw, b.y*cw, b.r, 0, 6.28); cctx.fill(); }
+  cctx.lineWidth = 2; cctx.shadowBlur = 12; cctx.shadowColor = color; cctx.globalAlpha = 1;
+  for (const l of clinks){            // las líneas se dibujan poco a poco
+    const p = Math.min(1,(ts-l.t)/600), e = 1-Math.pow(1-p,3), a = cpts[l.a], b = cpts[l.b];
+    cctx.beginPath(); cctx.moveTo(a.x,a.y); cctx.lineTo(a.x+(b.x-a.x)*e, a.y+(b.y-a.y)*e); cctx.stroke();
+  }
+  cpts.forEach((p,i) => {
+    const lit = i < cnext || cdone;
+    cctx.globalAlpha = lit ? 1 : .55; cctx.beginPath(); cctx.arc(p.x,p.y,lit ? 5.5 : 4,0,6.28); cctx.fill();
+    if (i === cnext && !cdone){        // la siguiente estrella late como pista
+      const k = REDUCE ? 0 : (ts%1400)/1400; cctx.globalAlpha = 1-k; cctx.lineWidth = 1.5;
+      cctx.beginPath(); cctx.arc(p.x,p.y,8+k*14,0,6.28); cctx.stroke(); cctx.lineWidth = 2;
+    }
+  });
+  cctx.shadowBlur = 0; cctx.globalAlpha = 1;
+  requestAnimationFrame(cDraw);
+}
+new IntersectionObserver(es => { cvis = es[0].isIntersecting; if (cvis){ cLayout(); requestAnimationFrame(cDraw); } }).observe(cc);
+addEventListener('resize', () => { if (cvis) cLayout(); });
+cc.addEventListener('pointerdown', e => {
+  if (cdone) return;
+  const r = cc.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top, p = cpts[cnext];
+  if (Math.hypot(x-p.x, y-p.y) > 36) return;      // solo cuenta si tocas la estrella que toca
+  if (cnext > 0) clinks.push({a:cnext-1, b:cnext, t:performance.now()});
+  cnext++;
+  if (cnext === 10){
+    clinks.push({a:9, b:0, t:performance.now()}); cdone = true;
+    $('cinfo').textContent = CONFIG.constellationName;
+    const m = $('cmsg'); m.innerHTML = '';
+    CONFIG.constellationText.forEach(t => { const q = document.createElement('p'); q.textContent = t; m.appendChild(q); });
+    m.classList.remove('hidden'); burst(['✨','💛'], 16);
+  } else $('cinfo').textContent = (10-cnext) === 1 ? 'Muy bien. Te falta 1 estrella.' : 'Muy bien. Te faltan ' + (10-cnext) + ' estrellas.';
+});
+
+$('wstar').addEventListener('click', () => { $('wdone').classList.add('hidden'); $('wbox').classList.remove('hidden'); $('wtext').focus(); });
+$('wsend').addEventListener('click', () => {
+  const v = $('wtext').value.trim();
+  if (!v){ $('wtext').focus(); return; }
+  const w = document.createElement('div'); w.className = 'wish'; w.textContent = v;   // textContent: seguro
+  document.body.appendChild(w); setTimeout(() => w.remove(), 3400);
+  launchShoot(); burst(['✨'], 10);
+  $('wtext').value = ''; $('wbox').classList.add('hidden');
+  $('wdone').textContent = 'Tu deseo ya va rumbo al cielo. ✨'; $('wdone').classList.remove('hidden');
+});
+
+
+$("cricket").addEventListener("click", () => {
+  const box = $("final"); box.innerHTML = "";
+  CONFIG.finalMessage.forEach((t,i) => {
+    const p = document.createElement("p"); p.textContent = t;
+    p.style.animationDelay = (i*1.4) + "s"; box.appendChild(p);
+  });
+  box.classList.remove("hidden");
+  burst(["💛","🦗","💌","✨"], 28);
+});
+</script>
+</body>
+</html>
